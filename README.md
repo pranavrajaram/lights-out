@@ -14,19 +14,19 @@ The original dataset had 1534 rows. Here are the columns we thought to be releva
  - **U.S._STATE**: Indicates the state where the outage event occurred.
  - **CLIMATE.REGION**: Indicates the climate region where the outage event occurred, as specified by National Centers for Environmental Information.
  - **CLIMATE.CATEGORY**: "Warm", "Cold", or "Normal", represents the climate episodes corresponding to the year.
- -**OUTAGE.START.DATE**: The day of the year when the outage event started.
- -**OUTAGE.START.TIME** The time of the day when the outage event started.
- -**OUTAGE.RESTORATION.DATE**: The day of the year when power was restored to all the customers.
- -**OUTAGE.RESTORATION.TIME** The time of the day when power was restored to all the customers.
- -**OUTAGE.DURATION**: Duration of outage events (in minutes).
- -**DEMAND.LOSS.MW**: Amount of peak demand lost during an outage event in Megawatts.
- -**CUSTOMERS.AFFECTED**: Number of customers affected by the power outage event.
- -**RES.PRICE**: Monthly electricity price in the residential sector (cents/kilowatt-hour).
- -**RES.SALES**: Electricity consumption in the residential sector (megawatt-hour).
- -**RES.PERCEN**: Percentage of residential electricity consumption compared to the total electricity consumption in the state.
- -**RES.CUST.PCT**: Percent of residential customers served in the U.S. state.
- -**POPPCT_URBAN**: Percentage of the total population of the U.S. state represented by the urban population.
- -**POPDEN_URBAN**: Population density of the urban areas.
+ - **OUTAGE.START.DATE**: The day of the year when the outage event started.
+ - **OUTAGE.START.TIME** The time of the day when the outage event started.
+ - **OUTAGE.RESTORATION.DATE**: The day of the year when power was restored to all the customers.
+ - **OUTAGE.RESTORATION.TIME** The time of the day when power was restored to all the customers.
+ - **OUTAGE.DURATION**: Duration of outage events (in minutes).
+ - **DEMAND.LOSS.MW**: Amount of peak demand lost during an outage event in Megawatts.
+ - **CUSTOMERS.AFFECTED**: Number of customers affected by the power outage event.
+ - **RES.PRICE**: Monthly electricity price in the residential sector (cents/kilowatt-hour).
+ - **RES.SALES**: Electricity consumption in the residential sector (megawatt-hour).
+ - **RES.PERCEN**: Percentage of residential electricity consumption compared to the total electricity consumption in the state.
+ - **RES.CUST.PCT**: Percent of residential customers served in the U.S. state.
+ - **POPPCT_URBAN**: Percentage of the total population of the U.S. state represented by the urban population.
+ - **POPDEN_URBAN**: Population density of the urban areas.
 
 ## Data Cleaning and Exploratory Data Analysis
 
