@@ -133,8 +133,34 @@ We also found that `DEMAND.LOSS.MW` ***IS NOT*** missing on the `CLIMATE.CATEGOR
 
 We shuffled `CLIMATE.CATEGORY` 1,000 times to generate a distribution of TVDs under the null hypothesis, and compared that to the observed TVD. The resulting p-value was 0.512, meaning we fail to reject the null hypothesis that the the distribution of the `CLIMATE.CATEGORY` column when `DEMAND.LOSS.MW` is missing is the same as the distribution of the column when `DEMAND.LOSS.MW` is not missing.
 
-
 ## Hypothesis Testing
+
+In one of the graphs from the 2nd section, we saw that the number of customers impacted by power outages seemed to be different for each month. We wanted to explore this idea a little more, because being able to determine if month has an effect on power outages would be quite valuable in the real world. It would also help answer one of the main causes of major power outages in the US, as posed by our original analysis question. So, we conducted a hypothesis test with the following set of hypotheses:
+
+- **Null Hypothesis**: Power outages are equally likely to occur across all months of the year.
+- **Alternative Hypothesis**: Power outages are more likely to occur in certain months of the year than others.
+
+We will use TVD as the test statistic here as well, since month is a categorical column. Our significance level is 1%.
+
+We first calculated the observed proportion of customers affected by power outages per month. That distribution is visualized below, as well as the 'Null Proportion'. In this case, the null proportion is 1/12 for every month, as there are 12 months in the year and the null hypothesis states that power outages are equally likely to occur in all of them.
+
+<iframe
+  src="assets/hyp-test-dist.html"
+  width="1000"
+  height="600"
+  frameborder="0"
+></iframe>
+
+We calculated the observed TVD of these 12 groups, which was about 0.15. Then, we simulated 1,000 draws from the null distribution, calculating the TVD for each one. The resulting distribution and the observed TVD is shown below.
+
+<iframe
+  src="assets/hyp-test-dist-2.html"
+  width="1000"
+  height="600"
+  frameborder="0"
+></iframe>
+
+As we can see, none of the simulated TVDs under the null are as large as the observed one, meaning the p-value is 0.0. So, we reject the null hypothesis at a significance level of 1%, indicating that there is statistically significant evidence to suggest that differences in affected customer distributions between months of the year cannot be solely attributed to sampling variation.
 
 ## Framing a Prediction Problem
 
