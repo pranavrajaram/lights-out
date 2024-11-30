@@ -38,7 +38,7 @@ Here are the steps we took to clean the data for analysis:
 1. We changed all of the column names to lower case and replaced periods with underscores. For instance 'OUTAGE.DURATION' became 'outage_duration'. This made it more convenient to access the columns in the future.
 1. We combined `OUTAGE.START.DATE` and `OUTAGE.START.TIME` into one pd.Timestamp column called `OUTAGE.START`. We did the same for `OUTAGE.RESTORATION.DATE` and `OUTAGE.RESTORATION.TIME`.
 1. We dropped all of the columns not listed above, and set the index of the DataFrame to the `OBS` column.
-1. We replaced values of 0 in the `CUSTOMERS.AFFECTED`, `OUTAGE.DURATION`, and `DEMAND.LOSS.MV` columns with NA. This is because we thought values of 0 in those columns indicated a missing value, as it does not make much sense for 0 customers to be affected by a major outage, the duration of an outage to be 0 minutes, or the total loss of demand to be 0 mega watts.
+1. We replaced values of 0 in the `CUSTOMERS.AFFECTED`, `OUTAGE.DURATION`, and `DEMAND.LOSS.MW` columns with NA. This is because we thought values of 0 in those columns indicated a missing value, as it does not make much sense for 0 customers to be affected by a major outage, the duration of an outage to be 0 minutes, or the total loss of demand to be 0 mega watts.
 
 This is a snapshot of what our DataFrame looked like after these cleaning steps. For the sake of appearance, the `RES.PRICE`, `RES.SALES`, `RES.PERCENT`, `RES.CUST.PERCENT`, `POPPCT_URBAN`, and `POPDEN_URBAN` columns are not included in the table below.
 
@@ -96,9 +96,33 @@ This table shows the state and year with the 10 highest average power outage dur
   frameborder="0"
 ></iframe>
 
-This heatmap, which is an interactive version of a pivot table, shows the number of customers affected by major power outages per climate region and year. As expected, areas of the United States prone to severe weather events (Southeast, Northeast, West) tend to have a larger amount of customers affected. We can also match up current events to this plot, such as Hurricane Sandy impacted the Northeast in 2012.
+This heatmap, which is an interactive version of a pivot table, shows the number of customers affected by major power outages per climate region and year. As expected, areas of the United States prone to severe weather events (Southeast, Northeast, West) tend to have a larger amount of customers affected. We can also match up current events to this plot, such as Hurricane Sandy impacting the Northeast in 2012.
 
 ## Assessment of Missingness
+
+### NMAR Analysis
+
+One column in the dataset that we believe could be Not Missing at Random (NMAR) is `OUTAGE.DURATION`, meaning the missingness of the column depends on the values themselves. For instance, energy provider companies might avoid reporting the duration of extremely long power outages because they are concerned about backlash and criticism from the public. 
+
+An additional piece of data that would help explain the missingness is the main energy provider for each power outage. If we had that information, we could try to find patterns between the missing values and energy providers, such as if one particular company consistently had missing duration values for major outages.
+
+### Missingness Dependency
+
+In this section, we found a column where the `DEMAND.LOSS.MW` column was Missing At Random (MAR) on, and a column where it was not. This was done with the larger goal of finding ways to address missingness in the `DEMAND.LOSS.MW` column, like probabilistic imputation. `DEMAND.LOSS.MW` is the column with the highest number of missing values — 901/1534 are NA.
+
+We found that `DEMAND.LOSS.MW` ***IS*** missing on the `POPPCT.URBAN` column. In order to determine this, we conducted a permutation test with difference of group means as the test statistic. The "groups" in question are False for if the data is not missing, and True for if it is. We shuffled the `POPPCT.URBAN` column 1,000 times to generate a distribution of differences under the null hypothesis, and compared that to the observed difference of means.
+
+<iframe
+  src="assets/mar-test-dist.html"
+  width="1000"
+  height="600"
+  frameborder="0"
+></iframe>
+
+This plot shows that distribution. We can see that the observed difference was greater than all of the simulated differences, giving us a p-value of 0.0. Therefore, we reject the null hypothesis that the the distribution of the `POPPCT.URBAN` column when `DEMAND.LOSS.MW` is missing is the same as the distribution of the column when `DEMAND.LOSS.MW` is not missing. We conclude that the demand loss of a power outage is MAR, conditional on the urban population percentage of the state where the outage occurred.
+
+We also found that `DEMAND.LOSS.MW` ***IS NOT*** missing on the `CLIMATE.CATEGORY` column. In order to determine this, we conducted a permutation test with total variance differenc (TVD) as the test statistic, since `CLIMATE.CATEGORY` is categorical. We shuffled `CLIMATE.CATEGORY` 1,000 times to generate a distribution of TVDs under the null hypothesis, and compared that to the observed TVD. The resulting p-value was 0.512, meaning we fail to reject the null hypothesis that the the distribution of the `CLIMATE.CATEGORY` column when `DEMAND.LOSS.MW` is missing is the same as the distribution of the column when `DEMAND.LOSS.MW` is not missing.
+
 
 ## Hypothesis Testing
 
