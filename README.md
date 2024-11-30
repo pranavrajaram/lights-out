@@ -35,12 +35,13 @@ The original dataset had 1534 rows. Here are the columns we thought to be releva
 
 Here are the steps we took to clean the data for analysis:
 1. We manually exported the data from a .xlsx to a .csv file and loaded it into python.
-1. We changed all of the column names to lower case and replaced periods with underscores. For instance 'OUTAGE.DURATION' became `outage_duration`. This made it more convenient to access the columns in the future.
+1. We changed all of the column names to lower case and replaced periods with underscores. For instance 'OUTAGE.DURATION' became 'outage_duration'. This made it more convenient to access the columns in the future.
 1. We combined `OUTAGE.START.DATE` and `OUTAGE.START.TIME` into one pd.Timestamp column called `OUTAGE.START`. We did the same for `OUTAGE.RESTORATION.DATE` and `OUTAGE.RESTORATION.TIME`.
-1. We dropped all of the columns not listed above, and set the index of the DataFrame to the 'OBS' column.
-1. We replaced values of 0 in the `CUSTOMERS.AFFECTED`, `OUTAGE.DURATION`, and `DEMAND.LOSS.MV` columns with NA. This is because we thought values of 0 in those columns indicated a missing value, as it does not make much sense for 0 customers to be affected by a major outage, or for the duration to be 0 minutes.
+1. We dropped all of the columns not listed above, and set the index of the DataFrame to the `OBS` column.
+1. We replaced values of 0 in the `CUSTOMERS.AFFECTED`, `OUTAGE.DURATION`, and `DEMAND.LOSS.MV` columns with NA. This is because we thought values of 0 in those columns indicated a missing value, as it does not make much sense for 0 customers to be affected by a major outage, the duration of an outage to be 0 minutes, or the total loss of demand to be 0 mega watts.
 
 This is a snapshot of what our DataFrame looked like after these cleaning steps:
+
 |   year |   month | u_s__state   | climate_region     | climate_category   | cause_category     |   outage_duration |   demand_loss_mw |   customers_affected |   res_price |   res_sales |   res_percen |   res_cust_pct |   poppct_urban |   popden_urban | outage_start        | outage_restoration   |
 |-------:|--------:|:-------------|:-------------------|:-------------------|:-------------------|------------------:|-----------------:|---------------------:|------------:|------------:|-------------:|---------------:|---------------:|---------------:|:--------------------|:---------------------|
 |   2011 |       7 | Minnesota    | East North Central | normal             | severe weather     |             70000 |              nan |                70000 |       11.6  | 2.33292e+06 |      35.5491 |        88.9448 |          73.27 |           2279 | 2011-07-01 17:00:00 | 2011-07-03 20:00:00  |
@@ -48,6 +49,31 @@ This is a snapshot of what our DataFrame looked like after these cleaning steps:
 |   2010 |      10 | Minnesota    | East North Central | cold               | severe weather     |             70000 |              nan |                70000 |       10.87 | 1.46729e+06 |      28.0977 |        88.9206 |          73.27 |           2279 | 2010-10-26 20:00:00 | 2010-10-28 22:00:00  |
 |   2012 |       6 | Minnesota    | East North Central | normal             | severe weather     |             68200 |              nan |                68200 |       11.79 | 1.85152e+06 |      31.9941 |        88.8954 |          73.27 |           2279 | 2012-06-19 04:30:00 | 2012-06-20 23:00:00  |
 |   2015 |       7 | Minnesota    | East North Central | warm               | severe weather     |            250000 |              250 |               250000 |       13.07 | 2.02888e+06 |      33.9826 |        88.8216 |          73.27 |           2279 | 2015-07-18 02:00:00 | 2015-07-19 07:00:00  |
+
+### Univariate Analysis
+
+<iframe
+  src="assets/causes-bar-graph.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+This bar graph shows the different causes of major power outages in the dataset. We can see that severe weather is the most frequent cause, while intentional attacks and system malfunctions were also common culprits. This is helpful to know because we get a better sense of when to be mindful of a potential power outage — it would be much more important for a household to prepare for a power outage if there was a hurricane in the area than islanding.
+
+### Bivariate Analysis
+
+<iframe
+  src="assets/outages-by-month.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+This plot shows the number of cuatomers affected by major power outages for each month in the dataset. This information is valuable because it helps us understand when to be most wary of a power outage. Summer and winter months appear to have the highest number of affected customers, which makes sense considering what we learned about severe weather. This graph also sets up our future hypothesis test.
+
+### Interesting Aggregates
+
 
 ## Assessment of Missingness
 
