@@ -102,13 +102,13 @@ This heatmap, which is an interactive version of a pivot table, shows the number
 
 ### NMAR Analysis
 
-One column in the dataset that we believe could be Not Missing at Random (NMAR) is `OUTAGE.DURATION`, meaning the missingness of the column depends on the values themselves. For instance, energy provider companies might avoid reporting the duration of extremely long power outages because they are concerned about backlash and criticism from the public. 
+One column in the dataset that we believe could be Not Missing at Random (NMAR) is `OUTAGE.DURATION`, meaning the missingness of the column depends on the values themselves. For instance, energy provider companies might avoid reporting the duration of extremely long power outages because they are concerned about backlash and criticism from the public. This would mean that higher values of `OUTAGE.DURATION` are more likely to be missing than lower ones, making the column not missing at random.
 
 An additional piece of data that would help explain the missingness is the main energy provider for each power outage. If we had that information, we could try to find patterns between the missing values and energy providers, such as if one particular company consistently had missing duration values for major outages.
 
 ### Missingness Dependency
 
-In this section, we found a column where the `DEMAND.LOSS.MW` column was Missing At Random (MAR) on, and a column where it was not. This was done with the larger goal of finding ways to address missingness in the `DEMAND.LOSS.MW` column, like probabilistic imputation. `DEMAND.LOSS.MW` is the column with the highest number of missing values — 901/1534 are NA.
+In this section, we found a column that the `DEMAND.LOSS.MW` column was Missing At Random (MAR) on, and a column where it was not. This was done with the larger goal of finding ways to address missingness in the `DEMAND.LOSS.MW` column, like probabilistic imputation. `DEMAND.LOSS.MW` is the column with the highest number of missing values — 901/1534 entries are NA.
 
 We found that `DEMAND.LOSS.MW` ***IS*** missing on the `POPPCT.URBAN` column. In order to determine this, we conducted a permutation test with difference of group means as the test statistic. The "groups" in question are False for if the data is not missing, and True for if it is. We shuffled the `POPPCT.URBAN` column 1,000 times to generate a distribution of differences under the null hypothesis, and compared that to the observed difference of means.
 
@@ -119,9 +119,9 @@ We found that `DEMAND.LOSS.MW` ***IS*** missing on the `POPPCT.URBAN` column. In
   frameborder="0"
 ></iframe>
 
-This plot shows that distribution. We can see that the observed difference was greater than all of the simulated differences, giving us a p-value of 0.0. Therefore, we reject the null hypothesis that the the distribution of the `POPPCT.URBAN` column when `DEMAND.LOSS.MW` is missing is the same as the distribution of the column when `DEMAND.LOSS.MW` is not missing. We conclude that the demand loss of a power outage is MAR, conditional on the urban population percentage of the state where the outage occurred.
+This plot shows that distribution. We can see that almost all of the observed difference was greater than the simulated differences, and the p-value was 0.002. Therefore, at a 1% significane level, we reject the null hypothesis that the the distribution of the `POPPCT.URBAN` column when `DEMAND.LOSS.MW` is missing is the same as the distribution of the column when `DEMAND.LOSS.MW` is not missing. We conclude that the demand loss of a power outage is MAR, conditional on the urban population percentage of the state where the outage occurred.
 
-We also found that `DEMAND.LOSS.MW` ***IS NOT*** missing on the `CLIMATE.CATEGORY` column. In order to determine this, we conducted a permutation test with total variance differenc (TVD) as the test statistic, since `CLIMATE.CATEGORY` is categorical. We shuffled `CLIMATE.CATEGORY` 1,000 times to generate a distribution of TVDs under the null hypothesis, and compared that to the observed TVD. The resulting p-value was 0.512, meaning we fail to reject the null hypothesis that the the distribution of the `CLIMATE.CATEGORY` column when `DEMAND.LOSS.MW` is missing is the same as the distribution of the column when `DEMAND.LOSS.MW` is not missing.
+We also found that `DEMAND.LOSS.MW` ***IS NOT*** missing on the `CLIMATE.CATEGORY` column. In order to determine this, we conducted a permutation test with total variance difference (TVD) as the test statistic, since `CLIMATE.CATEGORY` is categorical. We shuffled `CLIMATE.CATEGORY` 1,000 times to generate a distribution of TVDs under the null hypothesis, and compared that to the observed TVD. The resulting p-value was 0.512, meaning we fail to reject the null hypothesis that the the distribution of the `CLIMATE.CATEGORY` column when `DEMAND.LOSS.MW` is missing is the same as the distribution of the column when `DEMAND.LOSS.MW` is not missing.
 
 
 ## Hypothesis Testing
