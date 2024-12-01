@@ -124,7 +124,7 @@ We found that `DEMAND.LOSS.MW` ***IS*** missing on the `POPPCT.URBAN` column. In
   frameborder="0"
 ></iframe>
 
-This plot shows that distribution. We can see that almost all of the observed difference was greater than the simulated differences, and the p-value was 0.002. Therefore, at a 1% significane level, we reject the null hypothesis that the distribution of the `POPPCT.URBAN` column when `DEMAND.LOSS.MW` is missing is the same as the distribution of the column when `DEMAND.LOSS.MW` is not missing. We conclude that the demand loss of a power outage is MAR, conditional on the urban population percentage of the state where the outage occurred.
+This plot shows that distribution. We can see that almost all of the observed difference was greater than the simulated differences, and the p-value was 0.001. Therefore, at a 1% significance level, we reject the null hypothesis that the distribution of the `POPPCT.URBAN` column when `DEMAND.LOSS.MW` is missing is the same as the distribution of the column when `DEMAND.LOSS.MW` is not missing. We conclude that the demand loss of a power outage is MAR, conditional on the urban population percentage of the state where the outage occurred.
 
 We also found that `DEMAND.LOSS.MW` ***IS NOT*** missing on the `CLIMATE.CATEGORY` column. In order to determine this, we conducted a permutation test with total variance difference (TVD) as the test statistic, since `CLIMATE.CATEGORY` is categorical. We used the following pair of hypotheses for the test:
 
