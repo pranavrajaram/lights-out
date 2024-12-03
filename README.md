@@ -15,7 +15,7 @@ The original dataset had 1534 rows. Here are the columns we thought to be releva
  - **U.S._STATE**: Indicates the state where the outage event occurred.
  - **CLIMATE.REGION**: Indicates the climate region where the outage event occurred, as specified by National Centers for Environmental Information.
  - **CLIMATE.CATEGORY**: "Warm", "Cold", or "Normal", represents the climate episodes corresponding to the year.
- - **CAUSE.CATEGORY**: Tthe events that caused the major power outage.
+ - **CAUSE.CATEGORY**: The events that caused the major power outage.
  - **OUTAGE.START.DATE**: The day of the year when the outage event started.
  - **OUTAGE.START.TIME** The time of the day when the outage event started.
  - **OUTAGE.RESTORATION.DATE**: The day of the year when power was restored to all the customers.
@@ -163,6 +163,12 @@ We calculated the observed TVD of these 12 groups, which was about 0.15. Then, w
 As we can see, none of the simulated TVDs under the null are as large as the observed one, meaning the p-value is 0.0. So, we reject the null hypothesis at a significance level of 1%, indicating that there is statistically significant evidence to suggest that differences in affected customer distributions between months of the year cannot be solely attributed to sampling variation.
 
 ## Framing a Prediction Problem
+
+Our prediction problem will be to try and predict the number of customers impacted by a power outage. Our response variable is the `CUSTOMERS.AFFECTED` column, and because it is continuous, we will use regression as opposed to classification. We chose this column as our target variable because it provided a meaningful and easily understandable impact of a power outage. Companies and people alike will be able to learn how many customers are expected to be affected by an incoming power outages, and make the necessary accomodations. 
+
+One important thing to consider is we only want to use information available *before* the outage in our analysis. While a feature like total demand lost would no doubt be indicative of the number of impacted customers, we would only know the actual data after the outage has occurred, making the model effectively useless. The information we would know at the time of prediction would include things like regional characteristics (climate, population density), general customer energy usage (electricity spending, electricity consumption), the expected cause of the outage (incoming storm, islanding, etc.), and the month/day/time of the prediction. 
+
+In order to evaluate our model, we will use Root Mean Squared Error (RMSE). RMSE helps us understand how off the model was on average, and has an easily interpretable unit, which in this case is number of customers. We chose RMSE over metrics like Mean Absolute Error or the correlation coefficient between the predicted and observed values because we liked how RMSE made larger errors more impactful and also preserved the units of the original column.
 
 ## Baseline Model
 
