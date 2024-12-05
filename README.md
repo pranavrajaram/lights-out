@@ -8,10 +8,6 @@ The dataset we analyzed in this project consists of information related to major
 
 The data we used was from the Purdue Engineering Research Data site, and a data dictionary from the article "A Multi-Hazard Approach to Assess Severe Weather-Induced Major Power Outage Risks in the U.S" was also provided. The data qualifies a "major" power outage as one that impacted at least 50,000 customers or had an unplanned firm load loss of at least 300 MW. The data incldues not only data points related to the power outage (duration, customers affected, etc.), but also details about regional electricity consumption patterns, economic characteristics, and climate information about the impacted areas.
 
-ADDED POPULATION!!!!!
-
-KEPT CUSTOMER COLUMNS.
-
 The original dataset had 1534 rows. Here are the columns we thought to be relevant to our analysis:
  - **OBS**: Lists the observation entry number in the dataframe.
  - **Year**: Indicates the year when the outage event occurred.
@@ -31,9 +27,11 @@ The original dataset had 1534 rows. Here are the columns we thought to be releva
  - **RES.SALES**: Electricity consumption in the residential sector (megawatt-hour).
  - **RES.PERCEN**: Percentage of residential electricity consumption compared to the total electricity consumption in the state.
  - **RES.CUST.PCT**: Percent of residential customers served in the U.S. state.
+ - **RES.CUSTOMERS**: Annual number of customers served in the residential electricity sector of the U.S. state
  - **POPPCT_URBAN**: Percentage of the total population of the U.S. state represented by the urban population.
  - **POPDEN_URBAN**: Population density of the urban areas.
  - **POPULATION**: Population of the U.S. state in a year
+ - **TOTAL.CUSTOMERS**: Annual number of total customers served in the U.S. state
 
 ## Data Cleaning and Exploratory Data Analysis
 ### Data Cleaning
@@ -45,7 +43,7 @@ Here are the steps we took to clean the data for analysis:
 1. We dropped all of the columns not listed above, and set the index of the DataFrame to the `OBS` column.
 1. We replaced values of 0 in the `CUSTOMERS.AFFECTED`, `OUTAGE.DURATION`, and `DEMAND.LOSS.MW` columns with NA. This is because we thought values of 0 in those columns indicated a missing value, as it does not make much sense for 0 customers to be affected by a major outage, the duration of an outage to be 0 minutes, or the total loss of demand to be 0 mega watts.
 
-This is a snapshot of what our DataFrame looked like after these cleaning steps. For the sake of appearance, the `RES.PRICE`, `RES.SALES`, `RES.PERCENT`, `RES.CUST.PERCENT`, `POPPCT_URBAN`, and `POPDEN_URBAN` columns are not included in the table below.
+This is a snapshot of what our DataFrame looked like after these cleaning steps. For the sake of appearance, the `RES.PRICE`, `RES.SALES`, `RES.PERCENT`, `RES.CUST.PERCENT`, `RES.CUSTOMERS`, `POPPCT_URBAN`, `POPDEN_URBAN`, `POPULATION`, and `TOTAL.CUSTOMERS` columns are not included in the table below.
 
 |   year |   month | u_s__state   | climate_region     | climate_category   | cause_category     |   outage_duration |   demand_loss_mw |   customers_affected | outage_start        | outage_restoration   |
 |-------:|--------:|:-------------|:-------------------|:-------------------|:-------------------|------------------:|-----------------:|---------------------:|:--------------------|:---------------------|
