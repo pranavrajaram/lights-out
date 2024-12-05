@@ -6,7 +6,11 @@ This is our final project for the DSC 80 course at UC San Diego.
 ## Introduction
 The dataset we analyzed in this project consists of information related to major power outages in the United States from 2000 to 2016. We thought this dataset would be valuable to look into because, according to census.gov, 33.9 million households are impacted by power outages in the US every year. So, being able to predict and better understand power outages would no doubt have a positive real world impact. With this in mind, the question we used as the framework for our analysis was **What are the causes and effects of major power outages in the United States?**
 
-The data we used was from the Purdue Engineering Research Data site, and a data dictionary from the article "A Multi-Hazard Approach to Assess Severe Weather-Induced Major Power Outage Risks in the U.S" was also provided. The data qualifies a "major" power outage as one that impacted at least 50,000 customers or had an unplanned firm load loss of at least 300 MW. The data incldues not only data points related to the power outage (duration, customers affected, etc.), but also details about regional electricity consumption patterns, economic characteristics, and climate information about the impacted areas. 
+The data we used was from the Purdue Engineering Research Data site, and a data dictionary from the article "A Multi-Hazard Approach to Assess Severe Weather-Induced Major Power Outage Risks in the U.S" was also provided. The data qualifies a "major" power outage as one that impacted at least 50,000 customers or had an unplanned firm load loss of at least 300 MW. The data incldues not only data points related to the power outage (duration, customers affected, etc.), but also details about regional electricity consumption patterns, economic characteristics, and climate information about the impacted areas.
+
+ADDED POPULATION!!!!!
+
+KEPT CUSTOMER COLUMNS.
 
 The original dataset had 1534 rows. Here are the columns we thought to be relevant to our analysis:
  - **OBS**: Lists the observation entry number in the dataframe.
@@ -29,6 +33,7 @@ The original dataset had 1534 rows. Here are the columns we thought to be releva
  - **RES.CUST.PCT**: Percent of residential customers served in the U.S. state.
  - **POPPCT_URBAN**: Percentage of the total population of the U.S. state represented by the urban population.
  - **POPDEN_URBAN**: Population density of the urban areas.
+ - **POPULATION**: Population of the U.S. state in a year
 
 ## Data Cleaning and Exploratory Data Analysis
 ### Data Cleaning
@@ -166,11 +171,20 @@ As we can see, none of the simulated TVDs under the null are as large as the obs
 
 Our prediction problem will be to try and predict the number of customers impacted by a power outage. Our response variable is the `CUSTOMERS.AFFECTED` column, and because it is continuous, we will use regression as opposed to classification. We chose this column as our target variable because it provided a meaningful and easily understandable impact of a power outage. Companies and people alike will be able to learn how many customers are expected to be affected by an incoming power outages, and make the necessary accomodations. 
 
-One important thing to consider is we only want to use information available *before* the outage in our analysis. While a feature like total demand lost would no doubt be indicative of the number of impacted customers, we would only know the actual data after the outage has occurred, making the model effectively useless. The information we would know at the time of prediction would include things like regional characteristics (climate, population density), general customer energy usage (electricity spending, electricity consumption), the expected cause of the outage (incoming storm, islanding, etc.), and the month/day/time of the prediction. 
+One important thing to consider is we only want to use information available *before* the outage in our analysis. While a feature like total demand lost would no doubt be indicative of the number of impacted customers, we would only know the actual data after the outage has occurred, making the model effectively useless. The information we would know at the time of prediction would include things like regional characteristics (climate, population density), general customer energy usage (electricity spending, electricity consumption), the expected cause of the outage (incoming storm or not), and the month/day/time of the prediction. 
 
 In order to evaluate our model, we will use Root Mean Squared Error (RMSE). RMSE helps us understand how off the model was on average, and has an easily interpretable unit, which in this case is number of customers. We chose RMSE over metrics like Mean Absolute Error or the correlation coefficient between the predicted and observed values because we liked how RMSE made larger errors more impactful and also preserved the units of the original column.
 
 ## Baseline Model
+
+Our baseline model was a multiple linear regression model with five features. Here is a breakdown of each of the features:
+ - `POPULATION`: The population of the state of the outage, no transformations done.
+ - `POPPCT.URBAN`: We binarized this column so it would have values of 1 if the urban population percentage was greater than 70%, 0 otherwise.
+ - `CLIMATE.REGION`: The region of the country in the US, we used one hot encoding to make this a numerical feature (did not drop first).
+ - `is_not_spring`: A binary column with value 1 if the month of the outage is not March, April, or May, 0 otherwise. We did this because spring had by far the least number of power outages among the seasons, so we thought it was an effective way to include the month of the outage as a feature.
+ - `is_weather`: A binary column with value 1 if the cause of the outage was severe weather, 0 otherwise. We did this because severe weather was the only cause of an outage that we could expect beforehand, making it relevant for the model. Other cause categories like intentional attacks or system malfunctions would not be information we had at the time of prediction.
+
+We used a 75/25 train/test split, and got promising but far from perfect results. Our mean absolute error (MAE) between the predicted and actual values was 139305, which means the model was on average able to predict the number of customers impacted by a power outage within around 140,000. We think that this is a solid baseline, considering the values in the original `CUSTOMERS.AFFECTED` column ranged from 30,000 to 3,000,000. However, we believe that we can sharpen the model by experimenting with more potential features and using tools like cross-validation to widen the scope of the training and testing data.
 
 ## Final Model
 
