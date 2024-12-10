@@ -38,7 +38,7 @@ The original dataset had 1534 rows. Here are the columns we thought to be releva
 
 Here are the steps we took to clean the data for analysis:
 1. We manually exported the data from a .xlsx to a .csv file and loaded it into python.
-1. We changed all of the column names to lower case and replaced periods with underscores. For instance 'OUTAGE.DURATION' became 'outage_duration'. This made it more convenient to access the columns in the future.
+1. We changed all of the column names to lower case and replaced periods with underscores. For instance, 'OUTAGE.DURATION' became 'outage_duration'. This made it more convenient to access the columns in the future.
 1. We combined `OUTAGE.START.DATE` and `OUTAGE.START.TIME` into one pd.Timestamp column called `OUTAGE.START`. We did the same for `OUTAGE.RESTORATION.DATE` and `OUTAGE.RESTORATION.TIME`.
 1. We dropped all of the columns not listed above, and set the index of the DataFrame to the `OBS` column.
 1. We replaced values of 0 in the `CUSTOMERS.AFFECTED`, `OUTAGE.DURATION`, and `DEMAND.LOSS.MW` columns with NA. This is because we thought values of 0 in those columns indicated a missing value, as it does not make much sense for 0 customers to be affected by a major outage, the duration of an outage to be 0 minutes, or the total loss of demand to be 0 mega watts.
@@ -90,7 +90,7 @@ This plot shows the number of cuatomers affected by major power outages for each
 | New York     |   2012 |  607272           |
 | Virginia     |   2001 |  600000           |
 
-This table shows the state and year with the 10 highest average power outage durations. It is a good sanity check of the data, as we can try to match up the results of this aggregation with real life events. For instance, Hurricane Katrina would have impacted millions of Floridians in 2005, while the Northeast blackout of 2003 likely caused the large outage duration in New York state in 2003.
+This table shows the state and year with the 10 highest average power outage durations. It is a good sanity check of the data, as we can try to match up the results of this aggregation with real life events. For example, Hurricane Katrina would have impacted millions of Floridians in 2005, while the Northeast blackout of 2003 likely caused the large outage duration in New York state in 2003.
 
 <iframe
   src="assets/climate-heatmap.html"
@@ -105,7 +105,7 @@ This heatmap, which is an interactive version of a pivot table, shows the number
 
 ### NMAR Analysis
 
-One column in the dataset that we believe could be Not Missing at Random (NMAR) is `OUTAGE.DURATION`, meaning the missingness of the column depends on the values themselves. For instance, energy provider companies might avoid reporting the duration of extremely long power outages because they are concerned about backlash and criticism from the public. This would mean that higher values of `OUTAGE.DURATION` are more likely to be missing than lower ones, making the column not missing at random.
+One column in the dataset that we believe could be Not Missing at Random (NMAR) is `OUTAGE.DURATION`, meaning the missingness of the column depends on the values themselves. Energy provider companies might avoid reporting the duration of extremely long power outages because they are concerned about backlash and criticism from the public. This would mean that higher values of `OUTAGE.DURATION` are more likely to be missing than lower ones, making the column not missing at random.
 
 An additional piece of data that would help explain the missingness is the main energy provider for each power outage. If we had that information, we could try to find patterns between the missing values and energy providers, such as if one particular company consistently had missing duration values for major outages.
 
@@ -196,7 +196,7 @@ We used a 75/25 train/test split on the data, and got promising but far from per
 For our final model, we added three features to the baseline. They are as follows:
  - `CAUSE.CATEGORY`: We chose to include the cause category of the power outage because we thought it would help the model determine severity of outages. However, we had to be careful, as several of the causes would not be valid because we would only know about them after the outage occurred (for example, an intentional attack). So, we used a FunctionTransformer to effectively binarize the column so it had a value of 1 if the cause category was 'severe weather', as we would likely know about an incoming storm beforehand. The remaining values were 0.
  - `MONTH`: We wanted to include month as a feature because our hypothesis test showed that there is evidence to suggest that month had an impact on customers affected. Specifically, we noticed that the spring months (April, May, June) had by far the lowest amount of customers affected. So, we again used a FunctionTransformer to binarize the `MONTH` column, such that fall, winter, and summer months had a value of 1 while spring months had a value of 0.
- - `POPULATION`: We thought populate would be effective as a feature because it gave a better sense of the total number of customers in the area of the outage, as we cannot solely rely on urban population percetage to give us an understanding of the people who could potentially be affected. We did not perform any feature engineering on this column as it was already quantitative. States with higher populations have a greater chance of having more total customers affected, making this feature valuable.
+ - `POPULATION`: We thought populate would be effective as a feature because it gave a better sense of the total number of customers in the area of the outage. We did not perform any feature engineering on this column as it was already quantitative. States with higher populations likely have a greater chance of having more customers affected since there are more total customers in general, making this feature valuable.
 
 We chose to use a Random Forest Regressor for the final model as opposed to a Linear Regression. We thought that the Random Forest model would be better because it is better at handling nonlinear relationships between the features and target variable. Additionally, the Random Forest would be more robust towards outliers, which certainly exist within our data considering the wide range of the target column. The Random Forest Regressor would also be better at avoiding overfitting to the training data, and handles potential multicollinerarity between features.
 
@@ -215,7 +215,7 @@ Our final model improved over the baseline model, with a new mean absolute error
   frameborder="0"
 ></iframe>
 
-As we can see, the model is fairly accurate at predicting customers affected between 0 and 500,000, but loses accuracy as the number of affected customers gets higher. In fact, if we had filtered the data so that it dropped the 19 rows where the observed customers affected was greater than 1,000,000, the MAE improves to 97,061.
+As we can see, the model is fairly accurate at predicting customers affected between 0 and 500,000, but loses accuracy as the number of affected customers gets higher. In fact, if we had filtered the data so that it dropped the 19 rows where the observed customers affected was greater than 1,000,000, the MAE improves to 97,061. Overall, we think that the final model performs well for the majority of outages and provides valuable insights, although further work can definitely be done to handle extreme cases more effectively.
 
 ## Fairness Analysis
 
@@ -229,7 +229,7 @@ We used the following set of hypotheses for the permutation test:
 - **Null Hypothesis**: The distribution of the model's prediction errors is the same for outages caused by severe weather and outages not caused by severe weather. 
 - **Alternative Hypothesis**: The distribution of the model's prediction errors differs between outages caused by severe weather and outages not caused by severe weather.
 
-Our test statistic will be the absolute difference of root mean squared errors between each group. Larger values of this test statistic indicate that the model is unfair, as the predictions would be quite different for each group.
+Our test statistic will be the absolute difference of root mean squared errors between each group. Larger values of this test statistic indicate that the model is unfair, as the predictions would be quite different for each group. We use absolute difference because the test is two sided.
 
 We shuffled the `is_weather` column 1,000 times to generate a distribution of differences under the null hypothesis, and compared that to the observed absolute difference of RMSEs. 
 
