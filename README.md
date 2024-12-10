@@ -134,7 +134,7 @@ We also found that `DEMAND.LOSS.MW` ***IS NOT*** missing on the `CLIMATE.CATEGOR
 - **Null Hypothesis**: The distribution of the `CLIMATE.CATEGORY` column when `DEMAND.LOSS.MW` is missing is the same as the distribution of the column when `DEMAND.LOSS.MW` is not missing.
 - **Alternative Hypothesis**: The distribution of the `CLIMATE.CATEGORY` column when `DEMAND.LOSS.MW` is missing is different than as the distribution of the column when `DEMAND.LOSS.MW` is not missing.
 
-We shuffled `CLIMATE.CATEGORY` 1,000 times to generate a distribution of TVDs under the null hypothesis, and compared that to the observed TVD. The resulting p-value was 0.512, meaning we fail to reject the null hypothesis that the the distribution of the `CLIMATE.CATEGORY` column when `DEMAND.LOSS.MW` is missing is the same as the distribution of the column when `DEMAND.LOSS.MW` is not missing.
+We shuffled `CLIMATE.CATEGORY` 1,000 times to generate a distribution of TVDs under the null hypothesis, and compared that to the observed TVD. The resulting p-value was 0.508, meaning we fail to reject the null hypothesis that the the distribution of the `CLIMATE.CATEGORY` column when `DEMAND.LOSS.MW` is missing is the same as the distribution of the column when `DEMAND.LOSS.MW` is not missing.
 
 ## Hypothesis Testing
 
@@ -240,4 +240,4 @@ We shuffled the `is_weather` column 1,000 times to generate a distribution of di
   frameborder="0"
 ></iframe>
 
-Our p-value was 0.581. As shown in the plot, this means that there is a 58.1% chance of seeing an absolute difference of RMSE as extreme or more extreme than our observed value. So, we fail to reject the null hypothesis at a 1% significance level, meaning there is no evidence of unfairness in the model's prediction error between the two groups.
+Our p-value was 0.6. As shown in the plot, this means that there is a 60.0% chance of seeing an absolute difference of RMSE as extreme or more extreme than our observed value. So, we fail to reject the null hypothesis at a 1% significance level, meaning there is no evidence of unfairness in the model's prediction error between the two groups.
