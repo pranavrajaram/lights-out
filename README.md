@@ -167,9 +167,9 @@ As we can see, none of the simulated TVDs under the null are as large as the obs
 
 ## Framing a Prediction Problem
 
-Our prediction problem will be to try and predict the number of customers impacted by a power outage. Our response variable is the `CUSTOMERS.AFFECTED` column, and because it is continuous, we will use regression as opposed to classification. We chose this column as our target variable because it provided a meaningful and easily understandable impact of a power outage. Companies and people alike will be able to learn how many customers are expected to be affected by an incoming power outages, and make the necessary accomodations. 
+Our prediction problem will be to try and predict the number of customers impacted by a power outage. Our response variable is the `CUSTOMERS.AFFECTED` column, and because it is continuous, we will use regression as opposed to classification. We chose this column as our target variable because it provided a meaningful and easily understandable impact of a power outage. Companies and people alike will be able to learn how many customers are expected to be affected by an incoming power outage, and make the necessary accomodations. 
 
-One important thing to consider is we only want to use information available *before* the outage in our analysis. While a feature like total demand lost would no doubt be indicative of the number of impacted customers, we would only know the actual data after the outage has occurred, making the model effectively useless. The information we would know at the time of prediction would include things like regional characteristics (climate, population density), general customer energy usage (electricity spending, electricity consumption), the expected cause of the outage (incoming storm or not), and the month/day/time of the prediction. 
+One important thing to consider is we only want to use information available *before* the outage in our analysis. While a feature like total demand lost would no doubt be indicative of the number of impacted customers, we would only know the actual data after the outage has occurred, making the model effectively useless. The information we would know at the time of prediction would include things like regional characteristics (climate, population density), general customer energy usage (electricity spending, electricity consumption), and the month/day/time of the prediction. 
 
 In order to evaluate our model, we will use Mean Absolute Error (MAE). MAE helps us understand how off the model was on average, and has an easily interpretable unit, which in this case is number of customers. We chose MAE over metrics like Root Mean Squared Error (RMSE) or the correlation coefficient between the predicted and observed values because we liked how MAE preserved the original units while also not disproportionately weighting larger errors.
 
@@ -179,18 +179,42 @@ Our baseline model was a multiple linear regression model with two features. Her
  - `POPPCT.URBAN`: The state's urban population percentage. This was originally a quantiative variable. For simplicity, we made this an ordinal feature by binarizing the column so it would have values of 1 if the urban population percentage was greater than 70%, 0 otherwise.
  - `CLIMATE.REGION`: The region of the state in the US. This was originally a nominal variable, and we used one hot encoding to turn it into a quantiative feature.
 
-Here is a look at what our initial design matrix looked like:
+Here is a look at what our initial design matrix looked like (a few of the columns were dropped for the sake of appearance):
 
-|   poppct_urban_binarized |   climate_region_Central |   climate_region_East North Central |   climate_region_Northeast |   climate_region_Northwest |   climate_region_South |   climate_region_Southeast |   climate_region_Southwest |   climate_region_West |   climate_region_West North Central |   climate_region_nan |
-|-------------------------:|-------------------------:|------------------------------------:|---------------------------:|---------------------------:|-----------------------:|---------------------------:|---------------------------:|----------------------:|------------------------------------:|---------------------:|
-|                        1 |                        0 |                                   1 |                          0 |                          0 |                      0 |                          0 |                          0 |                     0 |                                   0 |                    0 |
-|                        1 |                        0 |                                   1 |                          0 |                          0 |                      0 |                          0 |                          0 |                     0 |                                   0 |                    0 |
-|                        1 |                        0 |                                   1 |                          0 |                          0 |                      0 |                          0 |                          0 |                     0 |                                   0 |                    0 |
-|                        1 |                        0 |                                   1 |                          0 |                          0 |                      0 |                          0 |                          0 |                     0 |                                   0 |                    0 |
-|                        1 |                        0 |                                   1 |                          0 |                          0 |                      0 |                          0 |                          0 |                     0 |                                   0 |                    0 |
+|   poppct_urban_binarized |   climate_region_Central |   climate_region_East North Central |   climate_region_Northeast |   climate_region_Northwest |   climate_region_South |
+|-------------------------:|-------------------------:|------------------------------------:|---------------------------:|---------------------------:|-----------------------:|
+|                        1 |                        1 |                                   0 |                          0 |                          0 |                      0 |
+|                        1 |                        0 |                                   0 |                          0 |                          0 |                      1 |
+|                        1 |                        0 |                                   0 |                          0 |                          0 |                      0 |
+|                        0 |                        1 |                                   0 |                          0 |                          0 |                      0 |
+|                        1 |                        0 |                                   0 |                          0 |                          0 |                      0 |
 
 We used a 75/25 train/test split on the data, and got promising but far from perfect results. Our mean absolute error (MAE) between the predicted and actual values was 148896, which means the model was on average able to predict the number of customers impacted by a power outage within around 150,000. We think that this is a solid baseline, considering the values in the original `CUSTOMERS.AFFECTED` column ranged from 30,000 to 3,000,000. However, we believe that we can sharpen the model by experimenting with more potential features and using tools like cross-validation to avoid over/under fitting and make better use of the training and testing data.
 
 ## Final Model
+
+For our final model, we added three features to the baseline. They are as follows:
+ - `CAUSE.CATEGORY`: We chose to include the cause category of the power outage because we thought it would help the model determine severity of outages. However, we had to be careful, as several of the causes would not be valid because we would only know about them after the outage occurred (for example, an intentional attack). So, we used a FunctionTransformer to effectively binarize the column so it had a value of 1 if the cause category was 'severe weather', as we would likely know about an incoming storm beforehand. The remaining values were 0.
+ - `MONTH`: We wanted to include month as a feature because our hypothesis test showed that there is evidence to suggest that month had an impact on customers affected. Specifically, we noticed that the spring months (April, May, June) had by far the lowest amount of customers affected. So, we again used a FunctionTransformer to binarize the `MONTH` column, such that fall, winter, and summer months had a value of 1 while spring months had a value of 0.
+ - `POPULATION`: We thought populate would be effective as a feature because it gave a better sense of the total number of customers in the area of the outage, as we cannot solely rely on urban population percetage to give us an understanding of the people who could potentially be affected. We did not perform any feature engineering on this column as it was already quantitative. States with higher populations have a greater chance of having more total customers affected, making this feature valuable.
+
+We chose to use a Random Forest Regressor for the final model as opposed to a Linear Regression. We thought that the Random Forest model would be better because it is better at handling nonlinear relationships between the features and target variable. Additionally, the Random Forest would be more robust towards outliers, which certainly exist within our data considering the wide range of the target column. The Random Forest Regressor would also be better at avoiding overfitting to the training data, and handles potential multicollinerarity between features.
+
+Now that we are using a Random Forest model, we could configure some hyperparameters to even better optimize the predictions and reduce overfitting. We chose the following two hyperparameters:
+ - `n_estimators`: The number of decision trees that contribute to the forest's prediction. We used five potential estimators: [250, 300, 350, 400, 450]
+ - `max_depth`: The maximum depth of each decision tree. We used the following seven values: [1, 2, 3, 4, 5, 8, 10]. We did not want the trees to be too deep so as to avoid overfitting to the training set.
+
+We used 5-fold cross-validation to determine the optimal hyperparameters using the GridSearchCV() method in sklearn. The best hyperparameters were 300 estimators and a max tree depth of 5.
+
+Our final model improved over the baseline model, with a new mean absolute error of 138113. This means the new model was better at predicting customers affected by over 10,000 customers. Here is a histogram that plots the actual customers affected and the predicted values.
+
+<iframe
+  src="assets/model-plot.html"
+  width="1000"
+  height="600"
+  frameborder="0"
+></iframe>
+
+As we can see, the model is fairly accurate at predicting customers affected between 0 and 500,000, but loses accuracy as the number of affected customers gets higher. In fact, if we had filtered the data so that it dropped the 19 rows where the observed customers affected was greater than 1,000,000, the MAE improves to 97,061.
 
 ## Fairness Analysis
