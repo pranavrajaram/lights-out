@@ -218,3 +218,26 @@ Our final model improved over the baseline model, with a new mean absolute error
 As we can see, the model is fairly accurate at predicting customers affected between 0 and 500,000, but loses accuracy as the number of affected customers gets higher. In fact, if we had filtered the data so that it dropped the 19 rows where the observed customers affected was greater than 1,000,000, the MAE improves to 97,061.
 
 ## Fairness Analysis
+
+We wanted to assess if our model's predictions were "fair" across different groups. That is, for two groups of the data, would the model's predictions have a similar amount of error? 
+
+The two groups we tested were the following:
+ - **Group 1**: outages that were caused by severe weather.
+ - **Group 2**: outages that were not caused by severe weather.
+
+We used the following set of hypotheses for the permutation test:
+- **Null Hypothesis**: The distribution of the model's prediction errors is the same for outages caused by severe weather and outages not caused by severe weather. 
+- **Alternative Hypothesis**: The distribution of the model's prediction errors differs between outages caused by severe weather and outages not caused by severe weather.
+
+Our test statistic will be the absolute difference of root mean squared errors between each group. Larger values of this test statistic indicate that the model is unfair, as the predictions would be quite different for each group.
+
+We shuffled the `is_weather` column 1,000 times to generate a distribution of differences under the null hypothesis, and compared that to the observed absolute difference of RMSEs. 
+
+<iframe
+  src="assets/fairness-plot.html"
+  width="1000"
+  height="600"
+  frameborder="0"
+></iframe>
+
+Our p-value was 0.581. As shown in the plot, this means that there is a 58.1% chance of seeing an absolute difference of RMSE as extreme or more extreme than our observed value. So, we fail to reject the null hypothesis at a 1% significance level, meaning there is no evidence of unfairness in the model's prediction error between the two groups.
