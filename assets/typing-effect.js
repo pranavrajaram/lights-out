@@ -1,21 +1,47 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const text = "Lights Out: An Analysis of Power Outages";
+document.addEventListener('DOMContentLoaded', () => {
     const titleElement = document.getElementById('animated-title');
-    let i = 0;
+    const text = "LIGHTS OUT";
+    let index = 0;
+    
+    // Make title visible
+    titleElement.style.visibility = 'visible';
+    
+    // Add cursor
+    const cursor = document.createElement('span');
+    cursor.classList.add('cursor');
+    titleElement.appendChild(cursor);
 
-    // Start in light mode
-    document.body.classList.add('light-mode');
-
-    function typeEffect() {
-        if (i < text.length) {
-            titleElement.innerHTML += text.charAt(i);
-            i++;
-            setTimeout(typeEffect, 100); // Adjust typing speed here
+    // Type out text
+    function typeText() {
+        if (index < text.length) {
+            titleElement.insertBefore(
+                document.createTextNode(text[index]),
+                cursor
+            );
+            index++;
+            setTimeout(typeText, 100);
         } else {
-            // Typing animation complete, remove light mode
-            document.body.classList.remove('light-mode');
+            // After typing finishes, wait 1 second then turn lights out
+            setTimeout(turnLightsOut, 1000);
         }
     }
 
-    typeEffect();
+    function turnLightsOut() {
+        // Add dark theme class to body
+        document.body.classList.add('lights-out');
+        
+        // Make content visible
+        const content = document.querySelector('.content-container');
+        if (content) {
+            content.classList.add('visible');
+        }
+
+        // Optional: remove cursor after lights out
+        setTimeout(() => {
+            cursor.style.display = 'none';
+        }, 1000);
+    }
+
+    // Start typing after a short delay
+    setTimeout(typeText, 500);
 });

@@ -1,3 +1,4 @@
+<div class="content-container">
 
 <div id="animated-title"></div>
 <link rel="stylesheet" href="assets/styles.css">
@@ -247,3 +248,6 @@ Our p-value was 0.6. As shown in the plot, this means that there is a 60.0% chan
 
 
 <script src="assets/typing-effect.js"></script>
+
+</div>
+

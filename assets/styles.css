@@ -1,36 +1,61 @@
-/* Light Mode (initial state) */
-body.light-mode {
-    background-color: #ffffff; /* White background */
-    color: #000000; /* Black text */
-    transition: background-color 1s ease, color 1s ease; /* Smooth transition */
-}
-
-/* Remove Light Mode (fall back to Hacker theme) */
 body {
-    background-color: #151515; /* Hacker theme background */
-    color: #b5e853; /* Hacker theme text color */
-    transition: background-color 1s ease, color 1s ease;
-}
-
-#animated-title {
-    font-size: 30px;
-    line-height: 1.5;
-    margin: 0;
-    padding: 0;
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
+    background: white;
+    color: black;
+    transition: all 1s ease-in-out;
+  }
+  
+  /* Dark theme class that will be added after animation */
+  body.lights-out {
+    background: #151515;
+    color: #eaeaea;
+  }
+  
+  body.lights-out a {
+    color: #63c0f5;
+  }
+  
+  body.lights-out h1, 
+  body.lights-out h2, 
+  body.lights-out h3, 
+  body.lights-out h4, 
+  body.lights-out h5, 
+  body.lights-out h6 {
+    color: #b5e853;
+  }
+  
+  /* Typing animation container */
+  #animated-title {
     font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
-    border-right: 2px solid black; /* Cursor for light mode */
-    animation: blink 0.5s step-end infinite alternate;
-}
-
-/* Blinking Cursor Animation */
-@keyframes blink {
-    from {
-        border-color: transparent;
-    }
-    to {
-        border-color: black; /* Cursor in light mode */
-    }
-}
+    font-size: 30px;
+    color: #b5e853;
+    text-align: center;
+    margin: 20px 0;
+    min-height: 40px;
+    visibility: hidden;
+  }
+  
+  /* Cursor animation */
+  .cursor {
+    display: inline-block;
+    width: 2px;
+    height: 24px;
+    background: #b5e853;
+    margin-left: 5px;
+    animation: blink 1s infinite;
+  }
+  
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  
+  /* Hide content initially */
+  .content-container {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+  }
+  
+  /* Show content after lights out */
+  .content-container.visible {
+    opacity: 1;
+  }
