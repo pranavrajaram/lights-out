@@ -1,9 +1,16 @@
+/* Light Mode (initial state) */
 body.light-mode {
     background-color: #ffffff; /* White background */
     color: #000000; /* Black text */
     transition: background-color 1s ease, color 1s ease; /* Smooth transition */
 }
 
+/* Remove Light Mode (fall back to Hacker theme) */
+body {
+    background-color: #151515; /* Hacker theme background */
+    color: #b5e853; /* Hacker theme text color */
+    transition: background-color 1s ease, color 1s ease;
+}
 
 #animated-title {
     font-size: 30px;
@@ -11,18 +18,19 @@ body.light-mode {
     margin: 0;
     padding: 0;
     text-align: left;
-    border-right: 2px solid black;
     white-space: nowrap;
     overflow: hidden;
     font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+    border-right: 2px solid black; /* Cursor for light mode */
     animation: blink 0.5s step-end infinite alternate;
 }
 
+/* Blinking Cursor Animation */
 @keyframes blink {
     from {
         border-color: transparent;
     }
     to {
-        border-color: black;
+        border-color: black; /* Cursor in light mode */
     }
 }
