@@ -2,7 +2,6 @@
 <div id="animated-title"></div>
 <link rel="stylesheet" href="assets/styles.css">
 
-# Lights Out: An Analysis of Power Outages
 ### Pranav Rajaram, Abhinav Chinnam
 
 This is our final project for the DSC 80 course at UC San Diego. 

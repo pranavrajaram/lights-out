@@ -1,8 +1,7 @@
 #animated-title {
     font-size: 30px;
     line-height: 1.5;
-    margin: 0 0 0 -40px;
-    font-weight: bold;
+    border-right: 2px solid;
     font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
     color: #b5e853;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1),
