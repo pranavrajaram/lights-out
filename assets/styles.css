@@ -1,6 +1,9 @@
 #animated-title {
     font-size: 30px;
     line-height: 1.5;
+    margin: 0; 
+    padding: 0; 
+    text-align: left; 
     border-right: 2px solid;
     white-space: nowrap;
     overflow: hidden;
