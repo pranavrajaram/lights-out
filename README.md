@@ -1,3 +1,7 @@
+
+<div id="animated-title"></div>
+<link rel="stylesheet" href="assets/styles.css">
+
 # Lights Out: An Analysis of Power Outages
 ### Pranav Rajaram, Abhinav Chinnam
 
@@ -241,3 +245,5 @@ We shuffled the `is_weather` column 1,000 times to generate a distribution of di
 ></iframe>
 
 Our p-value was 0.6. As shown in the plot, this means that there is a 60.0% chance of seeing an absolute difference of RMSE as extreme or more extreme than our observed value. So, we fail to reject the null hypothesis at a 1% significance level, meaning there is no evidence of unfairness in the model's prediction error between the two groups.
+
+<script src="assets/typing-effect.js"></script>

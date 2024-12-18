@@ -1,0 +1,18 @@
+#animated-title {
+    font-family: 'Courier New', monospace; /* Matches the Hacker theme */
+    font-size: 2em;
+    color: #32cd32; /* Hacker theme green */
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 2px solid;
+    animation: blink 0.5s step-end infinite alternate;
+}
+
+@keyframes blink {
+    from {
+        border-color: transparent;
+    }
+    to {
+        border-color: #32cd32;
+    }
+}
